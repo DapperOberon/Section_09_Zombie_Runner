@@ -8,16 +8,27 @@ public class Helicopter : MonoBehaviour {
 	public AudioSource callSource;
 	public AudioSource heliSource;
 	public AudioClip[] callAudio;
-	public AudioClip[] heliAudio; 
+	public AudioClip[] heliAudio;
 
-	// Update is called once per frame
-	void Update () {
-		if (CrossPlatformInputManager.GetButtonDown("CallHeli"))
+	private bool bCalled = false;
+	private Rigidbody rb;
+
+	private void Start()
+	{
+		rb = GetComponent<Rigidbody>();
+	}
+
+	public void Call()
+	{
+		if (!bCalled)
 		{
 			callSource.clip = callAudio[0];
 			callSource.Play();
 			heliSource.clip = heliAudio[0];
 			heliSource.Play();
+			rb.velocity = new Vector3(0, 0, 55.55f); // roughly three minutes to come
+			bCalled = true;
 		}
+		
 	}
 }

@@ -8,10 +8,12 @@ public class Player : MonoBehaviour {
 
 	public Transform spawnPointParent;
 	private Transform[] spawnPoints;
+	private Helicopter helicopter;
 
 	private void Start()
 	{
 		spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
+		helicopter = FindObjectOfType<Helicopter>();
 	}
 
 	// Update is called once per frame
@@ -26,5 +28,11 @@ public class Player : MonoBehaviour {
 	{
 		transform.position = spawnPoints[Random.Range(1, 4)].position;
 		respawn = false;
+	}
+
+	private void OnFindClearArea()
+	{
+		Debug.Log("Found clear area...");
+		helicopter.Call();
 	}
 }
