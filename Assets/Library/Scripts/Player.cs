@@ -6,6 +6,9 @@ public class Player : MonoBehaviour {
 
 	public bool respawn;
 
+	public AudioSource audioSource;
+	public AudioClip[] audioClips;
+
 	public Transform spawnPointParent;
 	private Transform[] spawnPoints;
 	private Helicopter helicopter;
@@ -14,6 +17,8 @@ public class Player : MonoBehaviour {
 	{
 		spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
 		helicopter = FindObjectOfType<Helicopter>();
+		audioSource.clip = audioClips[0];
+		audioSource.Play();
 	}
 
 	// Update is called once per frame

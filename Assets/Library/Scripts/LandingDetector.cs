@@ -17,7 +17,7 @@ public class LandingDetector : MonoBehaviour {
 	{
 		timeSinceLastTrigger += Time.deltaTime;
 
-		if(timeSinceLastTrigger > 1f)
+		if(timeSinceLastTrigger > 1f && Time.realtimeSinceStartup > 20f)
 		{
 			SendMessageUpwards("OnFindClearArea");
 		}
