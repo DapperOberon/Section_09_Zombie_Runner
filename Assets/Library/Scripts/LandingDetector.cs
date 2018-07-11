@@ -5,21 +5,17 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class LandingDetector : MonoBehaviour {
 
-	private AudioSource audioSource;
 	public float timeSinceLastTrigger = 0f;
-
-	// Use this for initialization
-	void Start () {
-		audioSource = GetComponent<AudioSource>();
-	}
+	private bool bSentMessage = false;
 
 	private void Update()
 	{
 		timeSinceLastTrigger += Time.deltaTime;
 
-		if(timeSinceLastTrigger > 1f && Time.realtimeSinceStartup > 20f)
+		if(timeSinceLastTrigger > 1f && Time.realtimeSinceStartup > 20f && !bSentMessage)
 		{
 			SendMessageUpwards("OnFindClearArea");
+			bSentMessage = true;
 		}
 		else
 		{
@@ -29,6 +25,9 @@ public class LandingDetector : MonoBehaviour {
 
 	private void OnTriggerStay(Collider other)
 	{
-		timeSinceLastTrigger = 0f;
+		if(other.tag != "Player")
+		{
+			timeSinceLastTrigger = 0f;
+		}
 	}
 }

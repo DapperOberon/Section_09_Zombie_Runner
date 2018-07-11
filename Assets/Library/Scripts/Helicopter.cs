@@ -5,30 +5,62 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class Helicopter : MonoBehaviour {
 
-	public AudioSource callSource;
-	public AudioSource heliSource;
-	public AudioClip[] callAudio;
-	public AudioClip[] heliAudio;
-
-	private bool bCalled = false;
-	private Rigidbody rb;
+	[Tooltip("Units per second")]
+	public float airSpeed;
+	[Tooltip("Units per second")]
+	public float landingSpeed;
+	private AudioSource audioSource;
+	private bool bDispatched = false;
+	private bool bLanding = false;
+	private Vector3 landingArea;
+	private Vector3 airTarget;
+	private Vector3 landTarget;
 
 	private void Start()
 	{
-		rb = GetComponent<Rigidbody>();
+		audioSource = GetComponent<AudioSource>();
 	}
 
-	public void Call()
+	public void OnHelicopterDispatch()
 	{
-		if (!bCalled)
+		audioSource.Play();
+		bDispatched = true;
+		//rb.velocity = new Vector3(0, 0, 55.55f); // roughly three minutes to come
+		landingArea = GameObject.FindGameObjectWithTag("LandingArea").transform.position;
+		airTarget = new Vector3(landingArea.x,landingArea.y + 20,landingArea.z);
+		landTarget = new Vector3(landingArea.x, landingArea.y - 1, landingArea.z);
+	}
+
+	private void FixedUpdate()
+	{
+		float airStep = airSpeed * Time.deltaTime;
+		float landingStep = landingSpeed * Time.deltaTime;
+
+		if (bDispatched && !bLanding)
 		{
-			callSource.clip = callAudio[0];
-			callSource.Play();
-			heliSource.clip = heliAudio[0];
-			heliSource.Play();
-			rb.velocity = new Vector3(0, 0, 55.55f); // roughly three minutes to come
-			bCalled = true;
+			transform.position = Vector3.MoveTowards(transform.position, airTarget, airStep);
+			print("Moving towards target airspace");
 		}
-		
+
+		if (transform.position == airTarget && !bLanding)
+		{
+			print("Starting landing...");
+			bLanding = true;
+		}
+
+		if (bLanding)
+		{
+			print("Landing...");
+			transform.position = Vector3.MoveTowards(transform.position, landTarget, landingStep);
+		}
+	}
+
+	private void OnCollisionEnter(Collision collision)
+	{
+		if (collision.gameObject.CompareTag("Player"))
+		{
+			Time.timeScale = 0;
+			print("Extracting...YOU WIN!!!");
+		}
 	}
 }

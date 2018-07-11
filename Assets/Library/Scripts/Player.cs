@@ -4,21 +4,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	public bool respawn;
+	private bool respawn;
 
-	public AudioSource audioSource;
-	public AudioClip[] audioClips;
-
+	public GameObject landingAreaPrefab;
 	public Transform spawnPointParent;
 	private Transform[] spawnPoints;
-	private Helicopter helicopter;
 
 	private void Start()
 	{
 		spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
-		helicopter = FindObjectOfType<Helicopter>();
-		audioSource.clip = audioClips[0];
-		audioSource.Play();
 	}
 
 	// Update is called once per frame
@@ -37,7 +31,13 @@ public class Player : MonoBehaviour {
 
 	private void OnFindClearArea()
 	{
-		Debug.Log("Found clear area...");
-		helicopter.Call();
+		Invoke("DropFlare", 3f);
+	}
+
+	void DropFlare()
+	{
+		// Drop flare
+		Debug.Log("Found clear area...dropping flare.");
+		Instantiate(landingAreaPrefab, transform.position, transform.rotation);
 	}
 }
