@@ -1,8 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour {
+
+	public float maxHealth = 100f;
+	private float health;
+	public Slider healthSlider;
+
+	public GameObject deathScreen;
 
 	private bool respawn;
 
@@ -13,6 +20,7 @@ public class Player : MonoBehaviour {
 	private void Start()
 	{
 		spawnPoints = spawnPointParent.GetComponentsInChildren<Transform>();
+		health = maxHealth;
 	}
 
 	// Update is called once per frame
@@ -20,6 +28,14 @@ public class Player : MonoBehaviour {
 		if (respawn)
 		{
 			Respawn();
+		}
+
+		healthSlider.value = health;
+
+		if (health <= 0)
+		{
+			deathScreen.SetActive(true);
+			Time.timeScale = 0;
 		}
 	}
 
@@ -36,8 +52,15 @@ public class Player : MonoBehaviour {
 
 	void DropFlare()
 	{
-		// Drop flare
-		Debug.Log("Found clear area...dropping flare.");
 		Instantiate(landingAreaPrefab, transform.position, transform.rotation);
+	}
+
+	IEnumerator OnTriggerStay(Collider other)
+	{
+		yield return new WaitForSeconds(1f);
+		if (other.gameObject.CompareTag("Zombie"))
+		{
+			health -= 0.5f;
+		}
 	}
 }

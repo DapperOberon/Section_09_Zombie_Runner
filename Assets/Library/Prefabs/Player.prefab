@@ -611,6 +611,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e207466bfdb24e4fa126d4aa6144937, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 100
+  deathScreen: {fileID: 0}
   landingAreaPrefab: {fileID: 1151411358880860, guid: bef5f9b9f38f75642b297fdcd192d0e9,
     type: 2}
   spawnPointParent: {fileID: 0}
